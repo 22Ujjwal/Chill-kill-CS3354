@@ -26,6 +26,13 @@ class Customer{
     }
     // getter for order
     public ArrayList<Order> getOrders(){
+
+        // ----------------- start of Sreeja's changes -----------------
+        String output = (orders.size()  == 1) ? ("\n You have " + 1 + " order") : ("\n You have " + orders.size() + " orders");
+        System.out.println(output);
+
+        // ----------------- end of Sreeja's changes -----------------
+
         return this.orders;
     }
     // setter for order
