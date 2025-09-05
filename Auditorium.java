@@ -93,6 +93,8 @@ class Auditorium{
 		char seatletter = 'A';
 
 		System.out.print("   ");
+		
+		System.out.println("Thu is testing...");
 
         // Display seat letter at the top and row position at the left
 		int cols = colCount();
