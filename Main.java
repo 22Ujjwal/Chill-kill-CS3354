@@ -1,14 +1,11 @@
-// Name: Thu Huong Huynh
-// NetID: txh230016
+// Ujjwal Gupta, CS3354 class Group 11
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.NoSuchElementException;
 
 public class Main {
 	public static void main(String[] args) {
-	    // copy any existing A#Final.txt files to A#.txt first
         copyFinalFilesToOriginal();
 		HashMap<String, Customer> database = new HashMap<>(); // map to store customer's info with order info
 
@@ -23,7 +20,7 @@ public class Main {
 		processUserFile(userdb, database);
 		Scanner sc = new Scanner(System.in);
 
-		// ***************** PRINT LOGIN MENU ***************************************
+		// ***************** PRINT LOGIN MENU v. cool ***************************************
 
 		while (true) {
 			// Prompt for username
