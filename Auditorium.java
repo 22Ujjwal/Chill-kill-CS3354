@@ -93,9 +93,10 @@ class Auditorium{
 		char seatletter = 'A';
 
 		System.out.print("   ");
-		
+
+		// adding print statements for tetsing
 		System.out.println("Thu is testing...");
-		System.out.println("Displaying chart....");
+		System.out.println("Displaying chart...."); 
 
         // Display seat letter at the top and row position at the left
 		int cols = colCount();
