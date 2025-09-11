@@ -98,7 +98,6 @@ class Auditorium{
 
 		//---------------------------------------------------------------------------------------
 		System.out.print("   ");
-		
 
         // Display seat letter at the top and row position at the left
 		int cols = colCount();
