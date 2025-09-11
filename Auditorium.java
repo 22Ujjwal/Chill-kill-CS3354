@@ -94,7 +94,7 @@ class Auditorium{
 
 
 		// ----------------------------------- Thu Huong's changes -----------------------------""
-		System.out.println("Thu is testing...");
+		System.out.println("Thu Huong is testing...");
 
 		//---------------------------------------------------------------------------------------
 		System.out.print("   ");
