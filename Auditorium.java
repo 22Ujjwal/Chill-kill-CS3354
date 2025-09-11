@@ -92,11 +92,12 @@ class Auditorium{
 		int count = 1;
 		char seatletter = 'A';
 
-		System.out.print("   ");
 
-		// adding print statements for tetsing
+		// ----------------------------------- Thu Huong's changes -----------------------------""
 		System.out.println("Thu is testing...");
-		System.out.println("Displaying chart...."); 
+
+		//---------------------------------------------------------------------------------------
+		System.out.print("   ");
 
         // Display seat letter at the top and row position at the left
 		int cols = colCount();

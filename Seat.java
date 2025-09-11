@@ -1,4 +1,5 @@
 class Seat {
+    
     // private memebers
     private int row;    // rows
     private char seat;  // seat positions
@@ -56,6 +57,5 @@ class Seat {
         if (!(o instanceof Seat)) return false;
         Seat s = (Seat) o;
         return row == s.row && seat == s.seat;   // ignore ticket‑type
-    }
-    
+    }   
 }
