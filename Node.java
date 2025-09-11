@@ -1,19 +1,22 @@
 class Node {
-
+	// William Lamparter wrl200000, changes made right here
     // members
     private Node next; // pointer to next node
     private Seat payload; // seat stored in the node
+    private int counter;
 
     // Default constructor
     public Node() {
         this.next = null;
         this.payload = null;
+        this.counter = 0;
     }
 
     // Overloaded constructor
     public Node(Node next, Seat payload) {
         this.next = next;
         this.payload = payload;
+        this.counter = 0;
     }
 
     // Mutators
@@ -32,6 +35,15 @@ class Node {
 
     public Seat getPayload() {
         return payload;
+    }
+    
+    public void counterPlus() {
+    	counter++;
+    	return;
+    }
+    
+    public int getCounter() {
+    	return counter;
     }
 
     // Returns node's contents as a string
