@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to CSS files -->
+    <link rel="stylesheet" href="homePageStyle.css">
+    <link rel="stylesheet" href="chatbotStyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <!-- Title for the tab -->
+    <title>Nintendo Switch ChatBot</title>
+</head>
+<body>
+    
+    <!-- Header and Navbar -->
+    <header>
+        <h1 class="navbar-logo"></h1>
+        <nav>
+            <a href="#">Games</a>
+            <a href="#">News</a>
+            <a href="#">Support</a>
+            <a class="login-btn" href="#">Login / Log Out</a>
+        </nav>
+    </header>
+
+    <!-- Chatbot Button -->
+    <div class="chatbot-button-wrapper">
+        <button id="myBtn" class="button-logo" title="Open Chatbot" onclick="openForm()">Chatbot</button>
+    </div>
+
+    <div class="chat-popup" id="myForm">
+        <form action="/action_page.php" class="form-container">
+            <h1>Chat</h1>
+
+            <label for="msg"><b>Message</b></label>
+            <textarea placeholder="Type message.." name="msg" required></textarea>
+
+            <button type="submit" class="btn">Send</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
+
+    <!-- Body of Page -->
+
+    <!-- Image Banner -->
+    <div class="banner">
+        <div class="column switch2-column">
+            <div class="switch2-logo"></div>
+        </div>
+
+        <div class="column middle-column">
+            <div class="console-logo"></div>
+            <div class="holding-logo"></div>
+        </div>
+
+        <div class="column right-column">
+            <div class="joystick-logo"></div>
+            <div class="controller-logo"></div>
+        </div>
+    </div>
+
+    <!-- Available for Purchase Banner -->
+    <div class="purchase-banner">
+        <h1>Available Now</h1>
+
+        <div class="button-group">
+            <button>How to Buy</button>
+            <button>Learn More</button>
+        </div>
+
+        <div class="purchase-image-container">
+            <div class="purchase-image-boxes console-purchase-one">
+                <h1>Nintendo Switch 2 + Pokémon™ Legends: Nintendo Switch 2 Edition Bundle - $499.99 MSRP*</h1>
+            </div>
+            <div class="purchase-image-boxes console-purchase-two">
+                <h1>Nintendo Switch 2 + Mario Kart™ World Bundle - $499.99 MSRP*</h1>
+            </div>
+            <div class="purchase-image-boxes console-purchase-three">
+                <h1>Nintendo Switch 2 - $449.99 MSRP*</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Banner -->
+    <div class="video-banner">
+        <div class="loading-text">
+            <h1>Nintendo Switch 2 - Video Trailer</h1>
+        </div>
+        <iframe class="video-player" 
+            src="https://www.youtube.com/embed/0QeqO0kFz-E" 
+            title="Nintendo Switch 2 – Launch Trailer">
+        </iframe>
+    </div>
+
+    <script src="chatbotScript.js"></script>
+
+</body>
+</html>
