@@ -32,16 +32,25 @@
         <button id="myBtn" class="button-logo" title="Open Chatbot" onclick="openForm()">Chatbot</button>
     </div>
 
+    <div id="chatOverlay" class="chat-overlay"></div>
     <div class="chat-popup" id="myForm">
-        <form action="/action_page.php" class="form-container">
+        <div class="form-container">
             <h1>Chat</h1>
+            <button onclick="closeForm()" class="close-button">X</button>
 
             <label for="msg"><b>Message</b></label>
-            <textarea placeholder="Type message.." name="msg" required></textarea>
+            <div id="chat-box" class="chat-box"></div>
 
-            <button type="submit" class="btn">Send</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-        </form>
+            <!-- Input area for typing messages -->
+            <div class="input-area">
+                <input 
+                    type="text" 
+                    id="user-input" 
+                    placeholder="Ask me about Nintendo Switch 2..."
+                >
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
     </div>
 
     <!-- Body of Page -->

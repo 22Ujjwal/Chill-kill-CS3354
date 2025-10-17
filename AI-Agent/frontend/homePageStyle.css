@@ -75,8 +75,6 @@ nav a:hover {
 #myBtn {
     font-family: "Red Hat Display", sans-serif;
     font-optical-sizing: auto;
-    /*position: fixed;
-    left: 50%;*/
     bottom: 20px;
     z-index: 99;
     font-size: 18px;
@@ -93,7 +91,7 @@ nav a:hover {
 }
 
 #myBtn:hover {
-    animation: wobble 0.8s;
+    animation: wobble 1.2s;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
 }
 
@@ -124,7 +122,6 @@ nav a:hover {
     background-repeat: no-repeat;
     background-size: 40px 40px; /* Resize logo */
     background-position: 20px center; /* Move logo inside button */
-    /* padding: 40px 40px 20px 20px;  Space for logo */
     border: none;
     cursor: pointer;
 }

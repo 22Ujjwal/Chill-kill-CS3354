@@ -2,10 +2,10 @@
 .chat-popup {
   display: none;
   position: fixed;
-  /*top: 50%;              /* move halfway down the screen */
-  left: 50%;             /* move halfway across the screen */
-  /*transform: translate(-50%, -50%);  perfectly center it */
+  top: 10%;
+  left: 30%;             /* move halfway across the screen */
   z-index: 999;          /* ensure it’s above everything */
+  width: 40vw;
 }
 
 /* Add styles to the form container */
@@ -17,42 +17,79 @@
   border-radius: 20px;
 }
 
-/* Full-width textarea */
-.form-container textarea {
-  width: 100%;
-  padding: 15px;
-  margin: 5px 0 22px 0;
+.chat-box {
+  height: 300px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  overflow-y: auto; 
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column; 
+}
+
+.input-area {
+  display: flex;
+  gap: 5px;
+}
+
+input[type="text"] {
+  flex: 1; 
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 8px 12px;
+  background-color: #007bff;
   border: none;
-  background: white;
-  resize: none;
-  min-height: 200px;
-  box-sizing: border-box;
-}
-
-/* When the textarea gets focus, do something */
-.form-container textarea:focus {
-  background-color: #ddd;
-  outline: none;
-}
-
-/* Set a style for the submit/send button */
-.form-container .btn {
-  background-color: #04AA6D;
+  border-radius: 5px;
   color: white;
-  padding: 16px 20px;
-  border: none;
   cursor: pointer;
-  width: 100%;
-  margin-bottom:10px;
-  opacity: 0.8;
 }
 
-/* Add a red background color to the cancel button */
-.form-container .cancel {
+button:hover {
+  background-color: #0056b3;
+}
+
+.message {
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+  max-width: 80%; 
+}
+
+.user-message {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end; 
+}
+
+.bot-message {
+  background-color: #e9ecef;
+  color: black;
+  align-self: flex-start; 
+}
+
+.close-button {
   background-color: red;
 }
 
-/* Add some hover effects to buttons */
-.form-container .btn:hover, .open-button:hover {
-  opacity: 1;
+.close-button:hover {
+  background-color: darkred;
+}
+
+/* Blur background */
+.chat-overlay {
+  display: none;              /* hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* dark translucent layer */
+  backdrop-filter: blur(2px);     /* adds blur */
+  z-index: 998;                  /* behind popup but above everything else */
 }
