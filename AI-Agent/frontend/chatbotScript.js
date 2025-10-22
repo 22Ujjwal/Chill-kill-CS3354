@@ -32,9 +32,15 @@ function closeForm() {
 
 // Function to handle sending messages
 function sendMessage() {
+  const popup = document.getElementById("myForm");
   const inputBox = document.getElementById("user-input"); // Textbox element
   const chatBox = document.getElementById("chat-box");   // Chat area
   const userText = inputBox.value.trim();                // Get input and remove spaces
+
+  // Only send if popup is visible (display not 'none')
+  if (popup.style.display === "none" || popup.style.display === "") {
+    return; // Stop if chatbot is closed
+  }
 
   // If input is empty, don't do anything
   if (userText === "") return;
@@ -64,3 +70,11 @@ function sendMessage() {
     chatBox.scrollTop = chatBox.scrollHeight;
   }, 500); // 500ms delay to feel more natural
 }
+
+//Function to allow users to send messages by pressing enter
+document.getElementById("user-input").addEventListener("keydown", function(event) {
+  if (event.key == "Enter") {
+    event.preventDefault();
+    sendMessage();
+  }
+});

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="chatbotStyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
@@ -32,13 +33,15 @@
         <button id="myBtn" class="button-logo" title="Open Chatbot" onclick="openForm()">Chatbot</button>
     </div>
 
-    <div id="chatOverlay" class="chat-overlay"></div>
+    <div id="chatOverlay" class="chat-overlay" onclick="closeForm()"></div>
     <div class="chat-popup" id="myForm">
         <div class="form-container">
-            <h1>Chat</h1>
-            <button onclick="closeForm()" class="close-button">X</button>
 
-            <label for="msg"><b>Message</b></label>
+            <div class="top-banner">
+                <h1>One Stop Switch 2</h1>
+                <h2 onclick="closeForm()" class="close-button">X</h2>
+            </div>
+
             <div id="chat-box" class="chat-box"></div>
 
             <!-- Input area for typing messages -->
@@ -48,7 +51,7 @@
                     id="user-input" 
                     placeholder="Ask me about Nintendo Switch 2..."
                 >
-                <button onclick="sendMessage()">Send</button>
+                <button onclick="sendMessage()" class="material-icons">send</button>
             </div>
         </div>
     </div>

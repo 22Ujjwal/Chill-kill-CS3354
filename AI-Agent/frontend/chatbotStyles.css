@@ -11,15 +11,55 @@
 /* Add styles to the form container */
 .form-container {
   max-width: 100%;
-  padding: 20px;
-  background-color: lightcoral;
+  padding: 0px 20px 20px 20px;
+  background-color: white;
   box-sizing: border-box;
   border-radius: 20px;
+  border: 4px solid red;
+  box-shadow: 10px 10px 30px 0px black;
+}
+
+.close-button {
+  color: red;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-button:hover {
+  color: darkred;
+  transform: scale(1.25);
+  transition: transform 0.8s ease, color 0.8s ease;
+}
+
+.top-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-banner h1 {
+  font-family: "Red Hat Display", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: bolder;
+  align-items: flex-start;
+  color: red;
+  font-size: 1.15rem;
+  border: 7px solid red;
+  padding: 4px;
+  border-radius: 25px;
+}
+
+.top-banner .close-button {
+  align-items: flex-end;
 }
 
 .chat-box {
   height: 300px;
-  border: 1px solid #ddd;
+  border: 1px solid lightgray;
   background-color: white;
   border-radius: 5px;
   padding: 10px;
@@ -42,27 +82,35 @@ input[type="text"] {
 }
 
 button {
-  padding: 8px 12px;
-  background-color: #007bff;
+  font-size: 1.5rem;
+  background-color: red;
   border: none;
-  border-radius: 5px;
+  border-radius: 50%;
   color: white;
+  font-weight: bolder;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: darkred;
+  transition-duration: 0.4s;
 }
 
 .message {
   margin: 5px 0;
   padding: 8px;
   border-radius: 5px;
-  max-width: 80%; 
+  max-width: 80%;
+  word-wrap: break-word;       /* forces long words to wrap */
+  overflow-wrap: break-word;   /* modern alternative for wrapping */
+  white-space: pre-wrap;       /* preserves spacing & wraps text */
 }
 
 .user-message {
-  background-color: #007bff;
+  background-color: red;
   color: white;
   align-self: flex-end; 
 }
@@ -71,14 +119,6 @@ button:hover {
   background-color: #e9ecef;
   color: black;
   align-self: flex-start; 
-}
-
-.close-button {
-  background-color: red;
-}
-
-.close-button:hover {
-  background-color: darkred;
 }
 
 /* Blur background */

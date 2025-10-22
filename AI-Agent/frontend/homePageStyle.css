@@ -75,6 +75,7 @@ nav a:hover {
 #myBtn {
     font-family: "Red Hat Display", sans-serif;
     font-optical-sizing: auto;
+    font-weight: bold;
     bottom: 20px;
     z-index: 99;
     font-size: 18px;
