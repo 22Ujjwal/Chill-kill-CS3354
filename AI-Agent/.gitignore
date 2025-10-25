@@ -37,3 +37,11 @@ coverage/
 
 # Misc
 *.log
+
+# Documentation files (local setup guides - do not push to GitHub)
+BACKEND_SETUP.md
+BACKEND_IMPLEMENTATION.md
+BACKEND_CHECKLIST.md
+FRONTEND_INTEGRATION_GUIDE.py
+
+```
