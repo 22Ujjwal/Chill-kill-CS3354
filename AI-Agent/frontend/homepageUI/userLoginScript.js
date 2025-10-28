@@ -6,11 +6,14 @@
 //Function for displaying username in dashboard when user logs in
 window.addEventListener('DOMContentLoaded', () => {
     const navbarDisplayUser = document.getElementById('navbarDisplayUser');
+    const navbarLoginButton = document.getElementById('navbarLoginButton');
     const displayName = localStorage.getItem('displayName');
     console.log("Loaded display name:", displayName);
     if (displayName) {
         navbarDisplayUser.textContent = 'Welcome ' + displayName + '!';
+        navbarLoginButton.textContent = 'Logout';
     } else {
         navbarDisplayUser.textContent = '';
+        navbarLoginButton.textContent = 'Login';
     }
 });
