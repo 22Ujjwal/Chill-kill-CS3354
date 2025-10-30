@@ -43,5 +43,9 @@ BACKEND_SETUP.md
 BACKEND_IMPLEMENTATION.md
 BACKEND_CHECKLIST.md
 FRONTEND_INTEGRATION_GUIDE.py
+BACKEND_READY.md
+
+# Readme files (ignore all README variants anywhere)
+[Rr][Ee][Aa][Dd][Mm][Ee]*
 
 ```

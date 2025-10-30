@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ===== API Keys & Credentials =====
-FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY", "fc-7e746c399d9f49ce88affe7c2b1244aa")
+# Do NOT provide defaults for secret keys. They must come from environment/.env
+FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Set this in .env
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")  # Set this in .env
 PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")  # Adjust if needed
