@@ -66,10 +66,18 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Get name to display
+// This Function was merged to onAuthStateChanged() in userLoginScript.js to accomodate with FireBase system.
+// onAuthStateChanged() use FireBase storage instead of local storage.
+
+// ------------------------------------------------------------------------------------------------------------
+// **Note: I commented out getDisplayName() and somehow this caused the login authentication system to crash.
+// (When I tried to sign the user in, it threw an error "Invalid username/password")
+// Even though the function is empty, do not delete it to avoid crashing.
+// ------------------------------------------------------------------------------------------------------------
+
 function getDisplayName() {
-    const email = userEmail.value;
-    const displayName = email.slice(0, email.indexOf("@")); 
+    //const email = userEmail.value;
+    //const displayName = email.slice(0, email.indexOf("@")); 
     //Send it to local storage to use in other scripts
-    localStorage.setItem('displayName', displayName);
+   // localStorage.setItem('displayName', displayName);
 }
