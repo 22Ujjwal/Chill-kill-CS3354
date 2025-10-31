@@ -14,6 +14,12 @@ body {
     background: linear-gradient(160deg, #020a43,#460d62, #4e0130, #860107);
 }
 
+.title a {
+    color: red; 
+    text-decoration: none; 
+    display: inline-block; 
+}
+
 .wrapper{
     width: 450px;
     background: white;

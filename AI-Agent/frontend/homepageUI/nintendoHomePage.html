@@ -22,11 +22,19 @@
         <h1 class="navbar-logo"></h1>
         <h1 class="navbar-username" id="navbarDisplayUser">hello</h1>
         <nav>
+            <div class="dropdown">
+                <button class="dropbtn">One Stop Switch 2</button>
+                <div class="dropdown-content">
+                    <a id="navbarLoginButton" class="login-btn" href="../loginUI/login.html">Login</a>
+                    <a class="login-btn" href="../signupUI/signup.html">Sign Up</a>
+                </div>
+            </div>
             <a href="#">Games</a>
             <a href="#">News</a>
             <a href="#">Support</a>
-            <a id="navbarLoginButton" class="login-btn" href="../loginUI/login.html">Login</a>
-            <a class="login-btn" href="#">Sign Up</a>
+            <!-- <a id="navbarLoginButton" class="login-btn" href="../loginUI/login.html">Login</a> -->
+            <!-- <a class="login-btn" href="#">Sign Up</a> -->
+             
         </nav>
     </header>
 
@@ -112,7 +120,7 @@
     </div>
 
     <script src="chatbotScript.js"></script>
-    <script src="userLoginScript.js"></script>
+    <script type="module" src="userLoginScript.js"></script>
 
 </body>
 </html>
