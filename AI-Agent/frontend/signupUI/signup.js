@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, updateProfile, deleteUser} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import {getFirestore, doc, runTransaction, setDoc, serverTimestamp, getDoc} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
 // Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyD6ZGFXmcogcggIOGuZvkXXrKjc1GqL8Mo",
@@ -15,22 +15,17 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // added 
-
-const normalize = (u) => u.trim().toLowerCase(); // Convert username to lowercase
-const isValidUsername = (u) => /^[a-zA-Z0-9_]{3,20}$/.test(u);
 
 // Simple client-side validation for Sign Up form
-document.getElementById("signupForm").addEventListener("submit", async function(event) {
+document.getElementById("signupForm").addEventListener("submit", function(event) {
   event.preventDefault(); // prevent form from refreshing the page
 
-  const username = document.getElementById("username").value.trim(); // added
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
 
   // Check for empty fields
-  if (!username || !email || !password || !confirmPassword) {
+  if (!email || !password || !confirmPassword) {
     alert("Please fill out all fields!");
     return;
   }
@@ -64,52 +59,18 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     return;
   }
 
-  //------------------------------- Account creation --------------------------------------
-  //username input validation
-  if (!isValidUsername(username)){
-    alert("Invalid username. ");
-    return;
-  }
-
-  const normalizedUsername = normalize(username);
-  try { // Inform the user when a username already exists prior to account creation
-    const duplicate = await getDoc(doc(db, "user-credentials", normalizedUsername));
-    if(duplicate.exists()){
-      alert("Username already existed. Choose a different username.");
-      return;
-    }
-
-    // Create new user
-    const credentials = await createUserWithEmailAndPassword(auth, email, password);
-    const uid = credentials.user.uid;
-
-    try{ // Check for duplicate username in the database 
-      await runTransaction(db, async(tx)=>{
-        const ref = doc(db, "user-credentials", normalizedUsername);
-        const snap = await tx.get(ref);
-        // Print error message if a username already exists
-        if (snap.exists()) {
-          throw new Error("Username already taken.");
-        }
-        tx.set(ref, { uid, email, createdAt: serverTimestamp() });
-      });
-      await setDoc(doc(db, "users", uid),{ // Add user to the database
-        username,
-        username_lower: normalizedUsername,
-        email,
-        createdAt: serverTimestamp()
-      });
-
-      // Display username on the navigation bar
-      await updateProfile(credentials.user, {displayName: username});
-      alert("Sign Up successful! Redirecting to Login page.");
-      window.location.href = '../loginUI/login.html'; // Redirect to login page
-    } catch (e){
-      // Rollback if Firestore step fails after Auth user creation
-      try { await deleteUser(auth.currentUser); } catch {}
-      throw e;
-    }
-  }  catch (error ){
-      alert(error.message || "Signup failed");
-    }
+  // If all validations pass
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    alert("Sign Up successful! Redirecting to Login page.");
+    window.location.href = '../loginUI/login.html'; // Redirect to login page
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert(errorMessage);
+    // ..
+  });
 });
