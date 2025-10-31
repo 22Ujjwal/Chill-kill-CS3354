@@ -41,6 +41,42 @@ function showMessage(text, type) {
 // helper
 const normalize = (u) => u.trim().toLowerCase();
 
+// Validation functions
+function validateEmail(email) {
+    // Check length
+    if (email.length > 254) return false;
+    // Check for spaces or control characters
+    if (/[\s\x00-\x1F\x7F]/.test(email)) return false;
+    // Check basic email format
+    const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+$/;
+    return emailRegex.test(email);
+}
+
+// Validate username
+function validateUsername(username) {
+    // Check length (3-20)
+    if (username.length < 3 || username.length > 20) return false;
+    // Check for spaces or control characters
+    if (/[\s\x00-\x1F\x7F]/.test(username)) return false;
+    // Only alphanumeric
+    return /^[a-zA-Z0-9]+$/.test(username);
+}
+
+// Validate password
+function validatePassword(password) {
+    // Check length (8-32)
+    if (password.length < 8 || password.length > 32) return false;
+    // Check for spaces or control characters
+    if (/[\s\x00-\x1F\x7F]/.test(password)) return false;
+    // Check requirements: at least 1 uppercase, 1 lowercase, 1 number, 1 special char
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[^a-zA-Z0-9]/.test(password);
+    
+    return hasUppercase && hasLowercase && hasNumber && hasSpecial;
+}
+
 // username sign in
 async function signInFlipFlop(input, password){
     const value = input.trim();
@@ -70,8 +106,28 @@ loginForm.addEventListener('submit', async (e) => {
     // prevent browser's default reloading after the user presses "login" button
     e.preventDefault();
 
-    const input = userInput.value;
+    const input = userInput.value.trim();
     const password = passwordInput.value;
+
+    // Validate input format
+    const isEmail = input.includes('@');
+    if (isEmail) {
+        if (!validateEmail(input)) {
+            showMessage('Login failed. Username/email is invalid', 'error');
+            return;
+        }
+    } else {
+        if (!validateUsername(input)) {
+            showMessage('Login failed. Username/email is invalid', 'error');
+            return;
+        }
+    }
+
+    // Validate password format
+    if (!validatePassword(password)) {
+        showMessage('Login failed. Password is invalid', 'error');
+        return;
+    }
 
     try {
         // login existing user
@@ -86,10 +142,7 @@ loginForm.addEventListener('submit', async (e) => {
         // login unsuccessfully
         console.error('Error:', error);
         showMessage('Invalid username or password.', 'error');
-        /*
-        PLACEHOLDER FOR NOW, FILL IN WITH PROPER LOCATION WHEN POSSIBLE
-        window.location.href = ;
-        */
+
     }
 });
 
