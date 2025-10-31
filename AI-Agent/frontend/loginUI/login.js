@@ -141,8 +141,7 @@ loginForm.addEventListener('submit', async (e) => {
     } catch (error) {
         // login unsuccessfully
         console.error('Error:', error);
-        showMessage('Invalid username or password.', 'error');
-
+        showMessage('Login failed. Username/email is invalid.', 'error');
     }
 });
 
