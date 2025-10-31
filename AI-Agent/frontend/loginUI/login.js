@@ -1,6 +1,8 @@
 // import Firebase modules
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,10 +18,11 @@ const firebaseConfig = {
 // initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // get login form, email, password, and message
 const loginForm = document.getElementById('loginForm');
-const userEmail = document.getElementById('email');
+const userInput = document.getElementById('email-or-username');
 const passwordInput = document.getElementById('password');
 const messageDiv = document.getElementById('message');
 
@@ -35,6 +38,30 @@ function showMessage(text, type) {
     }, 5000);
 }
 
+// helper
+const normalize = (u) => u.trim().toLowerCase();
+
+// username sign in
+async function signInFlipFlop(input, password){
+    const value = input.trim();
+    // direct to sign in with email function if input include @ symbol
+    if (input.includes('@')){
+        return await signInWithEmailAndPassword(auth, value, password);
+    } else { // else the user is signing in with a username. Search database
+        const ref_username = doc(db, 'user-credentials', normalize(input));
+        const get_data = await getDoc(ref_username);
+        if (!get_data.exists()) { // username does not match username in database
+            throw new Error('Username not found.');
+        }
+        const {email} = get_data.data(); // pull email from database
+        if (!email) {
+            throw new Error('Username mapping missing email');
+        }
+        return await signInWithEmailAndPassword(auth, email, password);
+    }
+
+}
+
 // login form
 // for testing purposes:
 // email --> abc@fakemail.com 
@@ -43,12 +70,12 @@ loginForm.addEventListener('submit', async (e) => {
     // prevent browser's default reloading after the user presses "login" button
     e.preventDefault();
 
-    const email = userEmail.value;
+    const input = userInput.value;
     const password = passwordInput.value;
 
     try {
         // login existing user
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInFlipFlop(input, password);
         // login successfully
         showMessage('Login successful!', 'success');            // Show message to screen
         console.log('User logged in:', userCredential.user);    // Show message to console
