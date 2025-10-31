@@ -20,11 +20,14 @@
     <!-- Header and Navbar -->
     <header>
         <h1 class="navbar-logo"></h1>
+        <h1 class="navbar-username" id="navbarDisplayUser">hello</h1>
         <nav>
             <a href="#">Games</a>
             <a href="#">News</a>
             <a href="#">Support</a>
-            <a class="login-btn" href="#">Login / Log Out</a>
+            <a id="navbarLoginButton" class="login-btn" href="../loginUI/login.html">Login</a>
+            <!--<a class="login-btn" href="#">Sign Up</a>-->
+            <a id="navbarLoginButton" class="login-btn" href="../signupUI/signup.html">Signup</a>
         </nav>
     </header>
 
@@ -33,6 +36,7 @@
         <button id="myBtn" class="button-logo" title="Open Chatbot" onclick="openForm()">Chatbot</button>
     </div>
 
+    <!-- Chatbot -->
     <div id="chatOverlay" class="chat-overlay" onclick="closeForm()"></div>
     <div class="chat-popup" id="myForm">
         <div class="form-container">
@@ -109,6 +113,7 @@
     </div>
 
     <script src="chatbotScript.js"></script>
+    <script type="module" src="userLoginScript.js"></script>
 
 </body>
 </html>
