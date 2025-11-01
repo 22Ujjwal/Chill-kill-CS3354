@@ -30,7 +30,7 @@ function validatePassword(password) {
     const hasLowercase = /[a-z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
     const hasSpecial = /[^a-zA-Z0-9]/.test(password);
-    
+
     return hasUppercase && hasLowercase && hasNumber && hasSpecial;
 }
 
@@ -60,7 +60,7 @@ const testLogin = (username, password) => {
 const mockUserDatabase = {
     'id1': {
         email: 'exists@gmail.com',
-        username: 'exists',
+        username: 'validUser',
         password: 'H3Ll0$aM'
     }
 };
