@@ -46,6 +46,8 @@ function sendMessage() {
   const chatBox = document.getElementById("chat-box");   // Chat area
   const userText = inputBox.value.trim();                // Get input and remove spaces
 
+
+
   // Only send if popup is visible (display not 'none')
   if (popup.style.display === "none" || popup.style.display === "") {
     return; // Stop if chatbot is closed
@@ -56,6 +58,18 @@ function sendMessage() {
 
   // If input is empty, don't do anything
   if (userText === "") {
+    isBotResponding = false;
+    return; 
+  }
+
+  if (userText.length > 400) {
+    alert("Query too long, please limit to 400 characters or less");
+    isBotResponding = false;
+    return; 
+  }
+
+  if (/[^\x20-\x7E]/.test(userText)) {
+    alert("Invalid query! Please do not use control characters or other unique unicode characters.");
     isBotResponding = false;
     return; 
   }
@@ -101,3 +115,5 @@ document.getElementById("user-input").addEventListener("keydown", function(event
     sendMessage();
   }
 });
+
+module.exports = { openForm, closeForm, sendMessage };
