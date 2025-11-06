@@ -1,3 +1,91 @@
+# Backend - Nintendo RAG Chatbot
+
+This backend is a Flask API that powers a Retrieval-Augmented Generation (RAG) chatbot using:
+- Firecrawl (website scraping, with HTTP fallback)
+- Google Gemini (LLM + embeddings, with deterministic fallback when quotas are exhausted)
+- Pinecone (vector DB)
+
+## Quick start
+
+1) Create and activate the project virtualenv (already configured for this workspace).
+2) Ensure `backend/.env` has your keys: `GOOGLE_API_KEY`, `PINECONE_API_KEY`, optionally `FIRECRAWL_API_KEY`.
+3) Start the server (port 5002 is recommended on macOS due to conflicts):
+
+```bash
+cd backend
+PORT=5002 ../../.venv/bin/python app.py
+```
+
+In another terminal, initialize the RAG index (scrapes → embeds → upserts):
+
+```bash
+curl -sS -X POST http://127.0.0.1:5002/api/initialize -H 'Content-Type: application/json' -d '{"rebuild": true}'
+```
+
+Check stats:
+
+```bash
+curl -sS http://127.0.0.1:5002/api/stats | jq .
+```
+
+## How to send a prompt (3 options)
+
+Option A — cURL:
+
+```bash
+curl -sS -X POST http://127.0.0.1:5002/api/query \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "What are the key tech specs of the Nintendo Switch 2?"}' | jq .
+```
+
+Option B — Python snippet:
+
+```python
+import requests
+
+BASE_URL = "http://127.0.0.1:5002"
+
+# Initialize once (optional after first start)
+requests.post(f"{BASE_URL}/api/initialize", json={"rebuild": False}, timeout=300)
+
+resp = requests.post(
+    f"{BASE_URL}/api/query",
+    json={"query": "List any tech specs mentioned for Nintendo Switch 2."},
+    timeout=60,
+)
+print(resp.json())
+```
+
+Option C — CLI helper (interactive):
+
+```bash
+cd backend
+../../.venv/bin/python cli_chat.py             # interactive mode
+CHATBOT_BASE_URL=http://127.0.0.1:5002 \
+  ../../.venv/bin/python cli_chat.py --once "Your question here"
+```
+
+Notes:
+- If the model quota is exhausted, embeddings/generation fall back gracefully; answers remain grounded to retrieved context but may be less fluent.
+- Initialize with `{"rebuild": true}` to clear and re-ingest.
+- To reset the conversation state: `POST /api/reset`.
+
+## API endpoints
+
+- POST `/api/initialize` — Initialize backend components and ingest content. Body: `{"rebuild": true|false}`
+- POST `/api/query` — Ask a question. Body: `{"query": "..."}`
+- GET `/api/history` — Get conversation history
+- POST `/api/reset` — Reset conversation history
+- GET `/api/health` — Health status
+- GET `/api/stats` — Vector DB stats
+
+## Troubleshooting
+
+- Port in use on macOS (e.g., 5000/5001): use another port, e.g., `PORT=5002`.
+- 400 INVALID_ARGUMENT on embeddings: now auto-batched (<=100 per request).
+- 429 RESOURCE_EXHAUSTED: Gemini quota exceeded. The backend uses a deterministic fallback so the RAG still works; upgrade quota for better quality.
+- Firecrawl returns 0 pages: the backend adds specific URLs and has an HTTP fallback to ingest at least a single page.
+
 # Nintendo Chatbot Backend
 
 A Retrieval-Augmented Generation (RAG) chatbot backend that scrapes Nintendo's website, embedds the content, stores it in a vector database, and answers user queries using LLM intelligence.

@@ -83,36 +83,45 @@ class GeminiEmbedder:
     
     def embed_texts(self, texts: List[str]) -> List[List[float]]:
         """
-        Convert multiple texts to embeddings.
+        Convert multiple texts to embeddings. Automatically batches to respect
+        API limits (Gemini allows at most 100 requests per batch).
         
         Args:
             texts (List[str]): List of texts to embed
         """
-        try:
-            result = self.client.models.embed_content(
-                model=self.model,
-                contents=texts
-            )
-            embeddings: List[List[float]] = []
-            if hasattr(result, "embeddings") and result.embeddings:
-                for emb in result.embeddings:
-                    embeddings.append(getattr(emb, "values", emb))
-            elif isinstance(result, dict):
-                data = result.get("embeddings") or result.get("data") or []
-                for emb in data:
-                    embeddings.append(emb.get("values") if isinstance(emb, dict) else emb)
+        def _embed_batch(batch: List[str]) -> List[List[float]]:
+            """Call the API for a batch and parse embeddings robustly."""
+            try:
+                res = self.client.models.embed_content(
+                    model=self.model,
+                    contents=batch
+                )
+                parsed: List[List[float]] = []
+                if hasattr(res, "embeddings") and res.embeddings:
+                    for emb in res.embeddings:
+                        parsed.append(getattr(emb, "values", emb))
+                elif isinstance(res, dict):
+                    data = res.get("embeddings") or res.get("data") or []
+                    for emb in data:
+                        parsed.append(emb.get("values") if isinstance(emb, dict) else emb)
+                # If nothing parsed, fall back per text in this batch
+                if not parsed:
+                    logger.warning("Gemini returned no embeddings for batch; using fallback per text")
+                    parsed = [self._fallback_embedding(t) for t in batch]
+                return parsed
+            except Exception as e:
+                logger.error(f"Error embedding batch with Gemini, using fallback: {e}")
+                return [self._fallback_embedding(t) for t in batch]
 
-            # If API didn't return anything, fall back per-text
-            if not embeddings:
-                logger.warning("Gemini returned no embeddings; using fallback per text")
-                embeddings = [self._fallback_embedding(t) for t in texts]
+        # Batch by at most 100 to satisfy API constraint
+        BATCH_LIMIT = 100
+        all_embeddings: List[List[float]] = []
+        for i in range(0, len(texts), BATCH_LIMIT):
+            batch = texts[i:i + BATCH_LIMIT]
+            all_embeddings.extend(_embed_batch(batch))
 
-            logger.info(f"Prepared embeddings for {len(texts)} texts")
-            return embeddings
-        
-        except Exception as e:
-            logger.error(f"Error embedding texts with Gemini, using fallback: {e}")
-            return [self._fallback_embedding(t) for t in texts]
+        logger.info(f"Prepared embeddings for {len(texts)} texts (batched)")
+        return all_embeddings
     def embed_documents(self, documents: List[Dict[str, str]]) -> List[Dict[str, Any]]:
         """
         Convert document contents to embeddings.
