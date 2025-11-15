@@ -1,5 +1,5 @@
+//Function for opening chatbot
 function openForm() {
-    //document.getElementById("myForm").style.display = "block";
     const popup = document.getElementById("myForm");
     const overlay = document.getElementById("chatOverlay");
 
@@ -12,8 +12,12 @@ function openForm() {
 
     // Add the animation for opening
     popup.classList.add("animate__animated", "animate__bounceInUp");
+
+    // Disable background scroll
+    document.body.classList.add("no-scroll");
 }
 
+//Function for closing chatbot
 function closeForm() {
     //document.getElementById("myForm").style.display = "none";
     const popup = document.getElementById("myForm");
@@ -23,12 +27,17 @@ function closeForm() {
     popup.classList.remove("animate__bounceInUp", "animate__animated");
     popup.classList.add("animate__animated", "animate__bounceOutDown");
 
+    // Re-enable background scroll
+    document.body.classList.remove("no-scroll");
+
     // Wait for animation to finish, then hide the popup
     setTimeout(() => {
         popup.style.display = "none";
         overlay.style.display = "none";
     }, 800); // duration matches the CSS animation length
 }
+
+let isBotResponding = false; // global flag to track bot response state
 
 // Function to handle sending messages
 function sendMessage() {
@@ -37,13 +46,37 @@ function sendMessage() {
   const chatBox = document.getElementById("chat-box");   // Chat area
   const userText = inputBox.value.trim();                // Get input and remove spaces
 
+
+
   // Only send if popup is visible (display not 'none')
   if (popup.style.display === "none" || popup.style.display === "") {
     return; // Stop if chatbot is closed
   }
 
+  // Stop if bot is already responding
+  if (isBotResponding) return;
+
   // If input is empty, don't do anything
-  if (userText === "") return;
+  if (userText === "") {
+    isBotResponding = false;
+    return; 
+  }
+
+  if (userText.length > 400) {
+    alert("Query too long, please limit to 400 characters or less");
+    isBotResponding = false;
+    return; 
+  }
+
+  if (/[^\x20-\x7E]/.test(userText)) {
+    alert("Invalid query! Please do not use control characters or other unique unicode characters.");
+    isBotResponding = false;
+    return; 
+  }
+
+  // Lock input until bot responds
+  isBotResponding = true;
+  inputBox.disabled = true;
 
   // User Message
   // Create a new div element for the user's message
@@ -68,6 +101,10 @@ function sendMessage() {
 
     // Auto-scroll to the bottom of the chat
     chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Unlock input
+    isBotResponding = false;
+    inputBox.disabled = false;
   }, 500); // 500ms delay to feel more natural
 }
 
@@ -78,3 +115,5 @@ document.getElementById("user-input").addEventListener("keydown", function(event
     sendMessage();
   }
 });
+
+module.exports = { openForm, closeForm, sendMessage };
