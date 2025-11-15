@@ -1,4 +1,3 @@
-# Node modules
 node_modules/
 AI-Agent/frontend/node_modules/
 
@@ -48,4 +47,15 @@ BACKEND_READY.md
 # Readme files (ignore all README variants anywhere)
 [Rr][Ee][Aa][Dd][Mm][Ee]*
 
-```
+ 
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.venv/
+venv/
+
+# Runtime/PID files
+*.pid
