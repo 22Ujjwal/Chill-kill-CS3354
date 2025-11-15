@@ -70,24 +70,38 @@ class ChatbotRAG:
                 include_metadata=True
             )
             
-            # Combine context with length limit
+            # Combine context with length limit and include real content
             context_parts = []
             total_length = 0
-            
+
             for doc in documents:
-                source = doc.get("metadata", {}).get("url", "unknown")
-                title = doc.get("metadata", {}).get("title", "")
+                meta = doc.get("metadata", {}) or {}
+                source = meta.get("url", "unknown")
+                title = meta.get("title", "")
                 score = doc.get("score", 0)
-                
-                # Build context entry
+
+                # Prefer content from metadata (content preview), with fallbacks
+                content = meta.get("content") or doc.get("content", "")
+                # Truncate per-document content to keep the overall prompt bounded
+                # Slightly larger snippet for better answers, but still conservative
+                max_content_len = 800
+                if isinstance(content, str) and len(content) > max_content_len:
+                    content = content[:max_content_len] + "..."
+
                 entry = f"\n[Score: {score:.2f} | Source: {title or source}]\n"
                 entry += f"URL: {source}\n"
-                entry += f"Content: (trimmed for space)\n"
-                
+                entry += f"Content: {content}\n"
+
                 if total_length + len(entry) <= self.max_context_length:
                     context_parts.append(entry)
                     total_length += len(entry)
-            
+                else:
+                    # If near the limit, add a truncated tail and stop
+                    remaining = max(0, self.max_context_length - total_length)
+                    if remaining > 100:
+                        context_parts.append(entry[:remaining] + "...\n")
+                    break
+
             combined_context = "".join(context_parts)
             
             logger.info(f"Retrieved {len(documents)} documents for query: {query[:50]}...")
@@ -123,21 +137,48 @@ User question: {query}
 
 Please answer the question based on the context provided above."""
             
-            # Generate response using Gemini
-            response = self.client.models.generate_content(
-                model=self.model,
-                contents=[
-                    {"role": "user", "parts": [{"text": user_message}]}
-                ],
-                generation_config={
-                    "temperature": self.temperature,
-                    "max_output_tokens": 500,
-                }
-            )
-            
-            if response.text:
+            # Generate response using Gemini with system instruction and temperature, with robust fallbacks
+            try:
+                response = self.client.models.generate_content(
+                    model=self.model,
+                    contents=[{"role": "user", "parts": [{"text": user_message}]}],
+                    system_instruction={"role": "system", "parts": [{"text": system_message}]},
+                    generation_config={"temperature": self.temperature}
+                )
+            except Exception:
+                try:
+                    # Many SDK versions accept a simple string as contents
+                    response = self.client.models.generate_content(
+                        model=self.model,
+                        contents=user_message
+                    )
+                except Exception:
+                    # Last resort: explicit role/parts without system/generation_config
+                    response = self.client.models.generate_content(
+                        model=self.model,
+                        contents=[{"role": "user", "parts": [{"text": user_message}]}]
+                    )
+
+            # Extract text robustly across SDK shapes
+            text = None
+            if hasattr(response, "text") and response.text:
+                text = response.text
+            elif isinstance(response, dict):
+                # Try common dict shapes
+                text = response.get("text")
+                if not text:
+                    # candidates[0].content.parts[0].text
+                    candidates = response.get("candidates") or []
+                    if candidates:
+                        cand0 = candidates[0] or {}
+                        content = cand0.get("content") or {}
+                        parts = content.get("parts") or []
+                        if parts and isinstance(parts[0], dict):
+                            text = parts[0].get("text")
+
+            if text:
                 logger.info(f"Generated response for query: {query[:50]}...")
-                return response.text
+                return text
             else:
                 logger.error("No response generated from Gemini")
                 return "Sorry, I couldn't generate a response. Please try again."

@@ -121,12 +121,23 @@ def initialize_endpoint():
         from src.modules.gemini_embedder import embed_content_for_storage
         from src.modules.pinecone_store import store_documents_in_pinecone
         
-        # Step 4: Scrape website
+        # Optional: clear existing vectors if requested (rebuild)
+        try:
+            payload = request.get_json(silent=True) or {}
+            if payload.get("rebuild") and vector_store:
+                logger.info("Rebuild requested: clearing Pinecone namespace before upsert...")
+                vector_store.clear_namespace()
+        except Exception as e:
+            logger.warning(f"Unable to process rebuild flag: {e}")
+
+        # Step 4: Scrape website (+ explicit tech-specs page)
         logger.info(f"Scraping website: {TARGET_WEBSITE_URL}")
+        tech_specs_url = "https://www.nintendo.com/us/gaming-systems/switch-2/tech-specs/"
         documents = scrape_nintendo_website(
             api_key=FIRECRAWL_API_KEY,
             target_url=TARGET_WEBSITE_URL,
-            limit=CRAWL_LIMIT
+            limit=CRAWL_LIMIT,
+            additional_urls=[tech_specs_url]
         )
         
         if not documents:

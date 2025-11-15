@@ -121,7 +121,8 @@ class FirecrawlScraper:
 def scrape_nintendo_website(
     api_key: str,
     target_url: str = "https://www.nintendo.com/us/",
-    limit: int = 10
+    limit: int = 10,
+    additional_urls: List[str] | None = None
 ) -> List[Dict[str, str]]:
     """
     Convenience function to scrape Nintendo website.
@@ -143,6 +144,57 @@ def scrape_nintendo_website(
         only_main_content=False
     )
     extracted = scraper.extract_text_from_pages(pages)
+
+    # Optionally scrape specific additional URLs (e.g., tech specs page)
+    if additional_urls:
+        for url in additional_urls:
+            try:
+                # Try Firecrawl single-page scrape endpoint if available
+                payload = {
+                    "url": url,
+                    "scrapeOptions": {
+                        "onlyMainContent": False,
+                        "formats": ["markdown", "html"],
+                        "parsers": []
+                    }
+                }
+                resp = requests.post(
+                    f"{scraper.base_url}/scrape",
+                    json=payload,
+                    headers=scraper.headers,
+                    timeout=60
+                )
+                if resp.ok:
+                    data = resp.json()
+                    if isinstance(data, dict):
+                        # Some Firecrawl responses wrap payload in a top-level 'data'
+                        payload = data.get("data", data)
+                        # If payload is a list, take the first item
+                        if isinstance(payload, list) and payload:
+                            payload = payload[0]
+                        if isinstance(payload, dict):
+                            doc = {
+                                "url": url,
+                                "title": (payload.get("metadata", {}) or {}).get("title", ""),
+                                "content": payload.get("markdown", payload.get("content", "")),
+                                "html": payload.get("html", "")
+                            }
+                            if doc["content"]:
+                                extracted.append(doc)
+                                logger.info(f"Added specific URL via Firecrawl scrape: {url}")
+                                continue
+                # Fallback: simple HTTP GET
+                http = requests.get(url, timeout=20)
+                http.raise_for_status()
+                extracted.append({
+                    "url": url,
+                    "title": "Nintendo Page",
+                    "content": http.text,
+                    "html": http.text
+                })
+                logger.info(f"Added specific URL via HTTP fallback: {url}")
+            except Exception as e:
+                logger.warning(f"Failed to fetch additional URL {url}: {e}")
 
     # Fallback: if Firecrawl returns no content, try a simple HTTP GET
     if not extracted:

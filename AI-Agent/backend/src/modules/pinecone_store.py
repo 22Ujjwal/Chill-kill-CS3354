@@ -211,7 +211,18 @@ class PineconeVectorStore:
                     stats = describe
 
             logger.info(f"Index stats fetched")
-            return stats or {}
+            # Ensure we return a JSON-serializable dict (Pinecone client may return model objects)
+            try:
+                if hasattr(stats, "to_dict"):
+                    return stats.to_dict() or {}
+                if isinstance(stats, dict):
+                    return stats
+                # Fallback: try to convert via repr -> not ideal but safe
+                return dict(stats)
+            except Exception:
+                # As a last resort, return an empty dict to avoid crashing endpoints
+                logger.exception("Failed to serialize index stats; returning empty dict")
+                return {}
         except TypeError as e:
             logger.error(f"Type error getting index stats: {e}")
             return {}
@@ -248,11 +259,16 @@ def store_documents_in_pinecone(
         # Create unique ID from URL
         vector_id = doc.get("url", "").replace("https://", "").replace("/", "_")
         
-        # Metadata to store with vector
+        # Metadata to store with vector (include a content preview for RAG context)
+        preview = doc.get("content_preview") or doc.get("content", "")
+        if isinstance(preview, str) and len(preview) > 1200:
+            preview = preview[:1200] + "..."
+
         metadata = {
             "url": doc.get("url", ""),
             "title": doc.get("title", ""),
-            "source": "nintendo_website"
+            "source": "nintendo_website",
+            "content": preview or ""
         }
         
         vectors.append((vector_id, doc["embedding"], metadata))

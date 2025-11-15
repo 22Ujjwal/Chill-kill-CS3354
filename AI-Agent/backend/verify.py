@@ -69,7 +69,7 @@ def verify_env_configuration():
         content = f.read()
     
     required_vars = {
-        "FIRECRAWL_API_KEY": "fc-7e746c399d9f49ce88affe7c2b1244aa (already set)",
+        "FIRECRAWL_API_KEY": "From Firecrawl dashboard",
         "GOOGLE_API_KEY": "From Google AI Studio",
         "PINECONE_API_KEY": "From Pinecone Dashboard",
         "PINECONE_INDEX_NAME": "Name of your Pinecone index",

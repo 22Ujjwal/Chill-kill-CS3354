@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ===== API Keys & Credentials =====
-FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY", "fc-7e746c399d9f49ce88affe7c2b1244aa")
+# Do NOT provide defaults for secret keys. They must come from environment/.env
+FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Set this in .env
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")  # Set this in .env
 PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")  # Adjust if needed
@@ -32,6 +33,6 @@ CRAWL_ENTIRE_DOMAIN = False
 EMBEDDING_DIMENSION = 1024  # Pinecone index configured for 1024-dim vectors
 
 # ===== RAG Configuration =====
-TOP_K_RESULTS = 5  # Number of documents to retrieve for context
+TOP_K_RESULTS = 3  # Number of documents to retrieve for context (lower to reduce token usage)
 MAX_CONTEXT_LENGTH = 2000  # Max chars of context to send to LLM
 TEMPERATURE = 0.3  # Gemini generation temperature
