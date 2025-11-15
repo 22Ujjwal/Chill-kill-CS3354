@@ -33,6 +33,6 @@ CRAWL_ENTIRE_DOMAIN = False
 EMBEDDING_DIMENSION = 1024  # Pinecone index configured for 1024-dim vectors
 
 # ===== RAG Configuration =====
-TOP_K_RESULTS = 5  # Number of documents to retrieve for context
+TOP_K_RESULTS = 3  # Number of documents to retrieve for context (lower to reduce token usage)
 MAX_CONTEXT_LENGTH = 2000  # Max chars of context to send to LLM
 TEMPERATURE = 0.3  # Gemini generation temperature
