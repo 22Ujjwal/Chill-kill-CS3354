@@ -27,7 +27,7 @@ const cancelBtn = document.getElementById('cancelBtn');
 if (cancelBtn) {
   cancelBtn.addEventListener('click', () => {
     // Redirect to homepage
-    window.location.href = "../homepageUI/nintendoHomePage.html";
+    window.location.href = "../../homepageUI/nintendoHomePage.html";
   });
 }
 
