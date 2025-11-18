@@ -1,0 +1,124 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #020a43,#460d62, #4e0130, #860107);
+}
+
+.wrapper{
+    width: 450px;
+    background: white;
+    color: navy;
+    border-radius: 20px;
+    padding: 50px 40px;
+}
+
+.wrapper h1 {
+    text-align: center;
+    width: 70%;
+    margin: 20px auto;
+  font-family: "Red Hat Display", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: bolder;
+  color: red;
+  font-size: 1.6rem;
+  border: 7px solid red;
+  padding: 4px;
+  border-radius: 25px;
+  
+}
+
+.wrapper .input-box{
+    width: 100%;
+    height: 50px;
+    background: white;
+    margin: 30px 0;
+
+}
+
+/* input boxes for email and password */
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 1px solid;
+    border-radius: 40px;
+    padding: 20px 45px 20px 20px;
+    font-size: 18px;
+    
+}
+
+/* submit button */
+.wrapper .submit_btn{
+    display: block;
+    margin: 20px auto;
+    width: 40%;
+    height: 45px;
+    background: linear-gradient(150deg, #413bf6, #9333ea);
+    color: white;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.3s ease, transform 0.2s ease; 
+   
+}
+
+
+.wrapper .submit_btn:hover {
+  opacity: 0.7;
+ 
+}
+
+/* cancel button */
+.wrapper .cancel_btn{
+    display: block;
+    margin: 20px auto;
+    width: 40%;
+    height: 45px;
+    background: linear-gradient(150deg, #413bf6, #9333ea);
+    color: white;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.3s ease, transform 0.2s ease; 
+   
+}
+
+
+.wrapper .cancel_btn:hover {
+  opacity: 0.7;
+ 
+}
+
+
+
+/* confirmation message */
+.message{
+    margin-top: 15px;
+    text-align: center;
+    font-size: 16px;
+    padding: 10px 15px;
+    transition: opacity 1s ease;
+}
+
+.message.success {
+    color: green;
+}
+.message.error{
+    color: red;
+}
