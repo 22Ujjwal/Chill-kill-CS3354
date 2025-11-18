@@ -59,3 +59,27 @@ test('Valid username, valid email, invalid password', () => {
 test('Valid username, valid email, invalid password', () => {
   expect(testSignup("invalid user", "notexists@gmail.com", "H3Ll0$aM", "H3Ll0$aM")).toBe("Account creation failed. Username is invalid");
 });
+
+test('valid old password, valid new password, valid retyped password', () => {
+  expect(testReset("H3Ll0$aM", "H311ow0rld!", "H311ow0rld!")).toBe("Password successfully updated!");
+});
+
+test('invalid old password, valid new password, valid retyped password', () => {
+  expect(testReset("hi", "H311ow0rld!", "H311ow0rld!")).toBe("Invalid password entered.");
+});
+
+test('exceptional old password, valid new password, valid retyped password', () => {
+  expect(testReset("Hello sam", "H311ow0rld!", "H311ow0rld!")).toBe("Invalid password entered.");
+});
+
+test('valid old password, invalid new password, invalid retyped password', () => {
+  expect(testReset("H3Ll0$aM", "helloworld", "helloworld")).toBe("Password does not meet the criteria.");
+});
+
+test('valid old password,exceptional new password, exceptional retyped password', () => {
+  expect(testReset("H3Ll0$aM", "hello world!", "hello world!")).toBe("Password does not meet the criteria.");
+});
+
+test('valid old password, valid new password, invalid retyped password', () => {
+  expect(testReset("H3Ll0$aM", "H311ow0rld!", "Cat123$")).toBe("Retyped password does not match.");
+});
