@@ -45,7 +45,7 @@ onAuthStateChanged(auth, (user) => {
 // Handle cancel
 if (cancelBtn) {
   cancelBtn.addEventListener('click', () => {
-    window.location.href = "../homepageUI/nintendoHomePage.html";
+    window.location.href = "../../homepageUI/nintendoHomePage.html";
   });
 }
 
