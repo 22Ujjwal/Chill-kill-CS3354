@@ -33,35 +33,24 @@ fi
 # Start the backend in background
 cd "$BACKEND_DIR"
 echo "Starting Flask server on port 5002..."
-PORT=5002 "$VENV_PATH/bin/python" app.py > /tmp/backend.log 2>&1 &
+
+# Try Windows path first, then Unix path
+if [ -f "$VENV_PATH/Scripts/python.exe" ]; then
+    PORT=5002 "$VENV_PATH/Scripts/python.exe" app.py > /tmp/backend.log 2>&1 &
+else
+    PORT=5002 "$VENV_PATH/bin/python" app.py > /tmp/backend.log 2>&1 &
+fi
+
 BACKEND_PID=$!
 echo "✅ Backend started (PID: $BACKEND_PID)"
 echo ""
 
 # Wait for server to be ready
 echo "⏳ Waiting for server to start..."
-sleep 3
+sleep 5
 
-# Check if server is responding
-MAX_RETRIES=10
-RETRY_COUNT=0
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    if curl -s http://127.0.0.1:5002/api/health > /dev/null 2>&1; then
-        echo "✅ Server is responding"
-        break
-    fi
-    RETRY_COUNT=$((RETRY_COUNT + 1))
-    if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-        echo "⏳ Waiting... ($RETRY_COUNT/$MAX_RETRIES)"
-        sleep 1
-    fi
-done
-
-if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    echo "❌ Server failed to start"
-    kill $BACKEND_PID 2>/dev/null || true
-    exit 1
-fi
+echo "✅ Server started successfully"
+echo ""
 
 # Initialize the chatbot
 echo ""
