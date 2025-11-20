@@ -1,31 +1,31 @@
 
-async function initializeAI() {
-  const response = await fetch('http://127.0.0.1:5002/api/initialize', {
-    method: 'POST',
-    headers: {
-      'Content-Type': "application/json"
-    },
-    body: { "rebuild": true }
-  })
-  const data = await response.json()
+// async function initializeAI() {
+//   const response = await fetch('http://127.0.0.1:5002/api/initialize', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': "application/json"
+//     },
+//     body: { "rebuild": true }
+//   })
+//   const data = await response.json()
 
-}
+// }
 
-async function healthCheck() {
-  // Invoke-RestMethod -Uri 'http://127.0.0.1:5002/api/health' -Method Get | ConvertTo-Json
-  try {
-    const response = await fetch('http://127.0.0.1:5002/api/health', {
-      method: 'GET'
-    })
-    const data = await response.json()
-    return data.status == "healthy"
-  }
-  catch (error) {
-    return false;
-  }
-}
+// async function healthCheck() {
+//   // Invoke-RestMethod -Uri 'http://127.0.0.1:5002/api/health' -Method Get | ConvertTo-Json
+//   try {
+//     const response = await fetch('http://127.0.0.1:5002/api/health', {
+//       method: 'GET'
+//     })
+//     const data = await response.json()
+//     return data.status == "healthy"
+//   }
+//   catch (error) {
+//     return false;
+//   }
+// }
 
-window.addEventListener('DOMContentLoaded', initializeAI);
+// window.addEventListener('DOMContentLoaded', initializeAI);
 
 //Function for opening chatbot
 function openForm() {
@@ -69,7 +69,7 @@ function closeForm() {
 //let isBotResponding = false; // global flag to track bot response state
 
 async function getMessage(message) {
-  await initializeAI();
+  //await initializeAI();
   try {
     const response = await fetch('http://127.0.0.1:5002/api/query', {
       method: 'POST',
