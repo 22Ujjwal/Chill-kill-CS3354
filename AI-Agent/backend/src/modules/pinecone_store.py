@@ -251,13 +251,21 @@ def store_documents_in_pinecone(
     
     # Prepare vectors for upsert
     vectors = []
-    for doc in documents:
+    for idx, doc in enumerate(documents):
         if "embedding" not in doc:
             logger.warning(f"Skipping document without embedding: {doc.get('url', 'unknown')}")
             continue
         
-        # Create unique ID from URL
-        vector_id = doc.get("url", "").replace("https://", "").replace("/", "_")
+        # Create unique ID from URL or use index as fallback
+        url = doc.get("url", "").strip()
+        if url:
+            vector_id = url.replace("https://", "").replace("http://", "").replace("/", "_")
+        else:
+            vector_id = f"doc_{idx}_{hash(str(doc))}"
+        
+        # Ensure ID is not empty
+        if not vector_id or vector_id.startswith("_"):
+            vector_id = f"doc_{idx}"
         
         # Metadata to store with vector (include a content preview for RAG context)
         preview = doc.get("content_preview") or doc.get("content", "")

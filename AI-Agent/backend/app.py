@@ -130,14 +130,37 @@ def initialize_endpoint():
         except Exception as e:
             logger.warning(f"Unable to process rebuild flag: {e}")
 
-        # Step 4: Scrape website (+ explicit tech-specs page)
+        # Step 4: Scrape website (+ explicit tech-specs page and other important URLs)
         logger.info(f"Scraping website: {TARGET_WEBSITE_URL}")
-        tech_specs_url = "https://www.nintendo.com/us/gaming-systems/switch-2/tech-specs/"
+        
+        # Additional URLs to scrape for comprehensive Nintendo Switch 2 information
+        additional_urls = [
+            # Tech specs and compatibility
+            "https://www.nintendo.com/us/gaming-systems/switch-2/tech-specs/#nintendoswitch2",
+            "https://www.nintendo.com/us/gaming-systems/switch-2/transfer-guide/compatible-games/",
+            
+            # Support documentation
+            "https://en-americas-support.nintendo.com/app/answers/detail/a_id/68426",
+            "https://en-americas-support.nintendo.com/app/answers/detail/a_id/68432",
+            "https://en-americas-support.nintendo.com/app/answers/detail/a_id/68415/p/1095/c/286",
+            "https://en-americas-support.nintendo.com/app/answers/detail/a_id/68459/p/1095/c/947",
+            
+            # Store product pages
+            "https://www.nintendo.com/us/store/products/nintendo-switch-2-system-123669/",
+            "https://www.nintendo.com/us/store/products/nintendo-switch-2-pokemon-legends-z-a-nintendo-switch-2-edition-bundle-122173/",
+            "https://www.nintendo.com/us/store/products/nintendo-switch-2-mario-kart-world-digital-bundle-122179/",
+            "https://www.nintendo.com/us/store/games/#p=1&sort=df&show=0&f=corePlatforms&corePlatforms=Nintendo+Switch+2",
+            
+            # Third-party retailers and reviews
+            "https://www.gamestop.com/consoles-hardware/nintendo-switch/consoles/products/nintendo-switch-2/424543.html",
+            "https://www.gamespot.com/gallery/all-the-nintendo-switch-2-games/2900-6128/#17",
+        ]
+        
         documents = scrape_nintendo_website(
             api_key=FIRECRAWL_API_KEY,
             target_url=TARGET_WEBSITE_URL,
             limit=CRAWL_LIMIT,
-            additional_urls=[tech_specs_url]
+            additional_urls=additional_urls
         )
         
         if not documents:
@@ -193,7 +216,7 @@ def initialize_endpoint():
 
 @app.route("/api/query", methods=["POST"])
 def query_endpoint():
-    """Query the chatbot."""
+    """Query the chatbot with security validation and response enhancement."""
     if not initialization_complete or not chatbot:
         return jsonify({
             "status": "error",
@@ -201,6 +224,10 @@ def query_endpoint():
         }), 400
     
     try:
+        # Import security and response processing modules
+        from src.modules.security import validate_and_sanitize
+        from src.modules.response_processor import enhance_response
+        
         data = request.get_json()
         query = data.get("query", "").strip()
         
@@ -210,16 +237,44 @@ def query_endpoint():
                 "message": "Query cannot be empty"
             }), 400
         
-        # Get RAG response
-        result = chatbot.answer_query(query)
+        # Step 1: Security validation
+        logger.info(f"Validating query: {query[:60]}...")
+        is_valid, processed_query = validate_and_sanitize(query)
+        
+        if not is_valid:
+            # Query failed security check - processed_query contains safety response
+            return jsonify({
+                "status": "success",
+                "query": query,
+                "response": processed_query,
+                "context_documents_count": 0,
+                "context_length": 0,
+                "is_security_response": True,
+                "turn": 1,
+                "timestamp": datetime.now().isoformat()
+            }), 200
+        
+        # Step 2: Get RAG response
+        logger.info(f"Getting RAG response for validated query...")
+        result = chatbot.answer_query(processed_query)
+        
+        # Step 3: Enhance response quality
+        logger.info(f"Enhancing response quality...")
+        enhanced_response = enhance_response(
+            response=result["response"],
+            query=query,
+            context_docs=len(result["context_documents"]),
+            turn=result.get("conversation_turn", 1)
+        )
         
         return jsonify({
             "status": "success",
-            "query": result["query"],
-            "response": result["response"],
-            "context_documents_count": len(result["context_documents"]),
-            "context_length": result["context_length"],
-            "turn": result["conversation_turn"],
+            "query": result.get("query", query),
+            "response": enhanced_response,
+            "context_documents_count": len(result.get("context_documents", [])),
+            "context_length": result.get("context_length", 0),
+            "is_security_response": False,
+            "turn": result.get("conversation_turn", 1),
             "timestamp": datetime.now().isoformat()
         }), 200
         
@@ -227,7 +282,7 @@ def query_endpoint():
         logger.error(f"Error processing query: {e}")
         return jsonify({
             "status": "error",
-            "message": str(e)
+            "message": "Sorry, I encountered an error. Please try again! 🎮"
         }), 500
 
 
