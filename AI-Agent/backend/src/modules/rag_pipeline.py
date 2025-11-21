@@ -123,11 +123,8 @@ class ChatbotRAG:
             str: Generated response
         """
         try:
-            # Build system message
-            system_message = """You are a helpful Nintendo chatbot assistant.
-            Answer the user's questions based on the provided context from Nintendo's website.
-            If the context doesn't contain relevant information, say so clearly.
-            Be concise and helpful."""
+            # Import system prompt
+            from src.config.system_prompt import SYSTEM_PROMPT
             
             # Build user message with context
             user_message = f"""Context from Nintendo website:
@@ -135,25 +132,26 @@ class ChatbotRAG:
 
 User question: {query}
 
-Please answer the question based on the context provided above."""
+Please answer the question based on the context provided above. Be friendly, helpful, and casual!"""
             
-            # Generate response using Gemini with system instruction and temperature, with robust fallbacks
+            # Generate response using Gemini with enhanced system instruction, with robust fallbacks
             try:
                 response = self.client.models.generate_content(
                     model=self.model,
                     contents=[{"role": "user", "parts": [{"text": user_message}]}],
-                    system_instruction={"role": "system", "parts": [{"text": system_message}]},
+                    system_instruction=SYSTEM_PROMPT,
                     generation_config={"temperature": self.temperature}
                 )
             except Exception:
                 try:
-                    # Many SDK versions accept a simple string as contents
+                    # Fallback: Try with system instruction as part of message
+                    full_message = f"{SYSTEM_PROMPT}\n\n{user_message}"
                     response = self.client.models.generate_content(
                         model=self.model,
-                        contents=user_message
+                        contents=full_message
                     )
                 except Exception:
-                    # Last resort: explicit role/parts without system/generation_config
+                    # Last resort: simple message without system instruction
                     response = self.client.models.generate_content(
                         model=self.model,
                         contents=[{"role": "user", "parts": [{"text": user_message}]}]
@@ -181,22 +179,22 @@ Please answer the question based on the context provided above."""
                 return text
             else:
                 logger.error("No response generated from Gemini")
-                return "Sorry, I couldn't generate a response. Please try again."
+                return "Sorry, I couldn't generate a response. Please try again. 🎮"
                 
         except Exception as e:
             logger.error(f"Error generating response with Gemini: {e}. Using fallback answer.")
             # Fallback: return a concise extractive-style answer
             if not context:
                 return (
-                    "I'm currently unable to contact the LLM. "
-                    "I don't have retrieved context to answer this."
+                    "I'm currently unable to contact the support system. "
+                    "But I'm here to help with Nintendo questions! Try again in a moment. 🎮"
                 )
             # Provide top context snippets as a helpful response
             snippet = context[:600]
             return (
-                "LLM temporarily unavailable. Based on the retrieved context, here are relevant details:\n\n"
+                "I'm having trouble generating a response right now, but here's what I found that might help:\n\n"
                 f"{snippet}\n\n"
-                "You can re-try shortly for a synthesized answer."
+                "Try asking again in a moment, or feel free to ask a different question!"
             )
     
     def answer_query(self, query: str) -> Dict[str, Any]:
