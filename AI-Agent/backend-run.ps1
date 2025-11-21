@@ -14,7 +14,8 @@ Write-Host ""
 # Check if venv exists
 if (-not (Test-Path (Join-Path $VENV_PATH "Scripts\python.exe"))) {
     Write-Host "[ERROR] Virtual environment not found at $VENV_PATH" -ForegroundColor Red
-    Write-Host "Please set up the venv first with: python -m venv .venv"
+    Write-Host "Please set up the venv first with: python -m venv .venv."
+    Write-Host "Then run: .\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt"
     exit 1
 }
 

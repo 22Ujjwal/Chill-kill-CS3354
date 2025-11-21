@@ -14,6 +14,7 @@ echo ""
 if [ ! -d "$VENV_PATH" ]; then
     echo "❌ Virtual environment not found at $VENV_PATH"
     echo "Please set up the venv first with: python3 -m venv .venv"
+    echo "Then run: .\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt"
     exit 1
 fi
 
