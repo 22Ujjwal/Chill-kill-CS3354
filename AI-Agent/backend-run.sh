@@ -7,28 +7,82 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKEND_DIR="$SCRIPT_DIR/backend"
 VENV_PATH="$SCRIPT_DIR/.venv"
 
-echo "🚀 Starting Nintendo Chatbot Backend..."
+echo ""
+echo "🎮 ═══════════════════════════════════════════════════════"
+echo "   Nintendo RAG Chatbot Backend - Quick Start"
+echo "═══════════════════════════════════════════════════════"
 echo ""
 
-# Check if venv exists
-if [ ! -d "$VENV_PATH" ]; then
-    echo "❌ Virtual environment not found at $VENV_PATH"
-    echo "Please set up the venv first with: python3 -m venv .venv"
+# ✅ PRE-FLIGHT CHECKS
+echo "📋 Running pre-flight checks..."
+echo ""
+
+# Check 1: Python installed
+if ! command -v python3 &> /dev/null; then
+    echo "❌ Python 3 not found!"
+    echo "   Please install Python 3: https://www.python.org/downloads/"
     exit 1
 fi
+echo "✅ Python 3 found"
 
-# Check if backend directory exists
+# Check 2: venv exists
+if [ ! -d "$VENV_PATH" ]; then
+    echo "❌ Virtual environment not found at $VENV_PATH"
+    echo ""
+    echo "📦 Creating virtual environment..."
+    python3 -m venv "$VENV_PATH"
+    echo "✅ Virtual environment created"
+    echo ""
+    echo "📦 Installing dependencies..."
+    "$VENV_PATH/bin/pip" install -q -r "$BACKEND_DIR/requirements.txt"
+    echo "✅ Dependencies installed"
+fi
+echo "✅ Virtual environment ready"
+
+# Check 3: Backend directory exists
 if [ ! -d "$BACKEND_DIR" ]; then
     echo "❌ Backend directory not found at $BACKEND_DIR"
     exit 1
 fi
+echo "✅ Backend directory found"
 
-# Check if .env exists
+# Check 4: .env file exists
 if [ ! -f "$BACKEND_DIR/.env" ]; then
-    echo "❌ .env file not found at $BACKEND_DIR/.env"
-    echo "Please create it with your API keys"
-    exit 1
+    echo "❌ .env file not found!"
+    echo ""
+    echo "📝 Creating .env from template..."
+    if [ -f "$BACKEND_DIR/.env.example" ]; then
+        cp "$BACKEND_DIR/.env.example" "$BACKEND_DIR/.env"
+        echo "✅ .env created from .env.example"
+        echo ""
+        echo "⚠️  IMPORTANT: Edit $BACKEND_DIR/.env and add your API keys:"
+        echo "   - GOOGLE_API_KEY (from Google AI Studio)"
+        echo "   - PINECONE_API_KEY (from Pinecone Dashboard)"
+        echo "   - FIRECRAWL_API_KEY (from Firecrawl)"
+        echo ""
+        read -p "Press Enter once you've added your API keys, or Ctrl+C to cancel..."
+    else
+        echo "❌ .env.example not found. Please create .env manually."
+        exit 1
+    fi
 fi
+echo "✅ .env file configured"
+
+# Check 5: API keys present
+if grep -q "your_.*_key_here\|^GOOGLE_API_KEY=$\|^PINECONE_API_KEY=$\|^FIRECRAWL_API_KEY=$" "$BACKEND_DIR/.env"; then
+    echo "⚠️  WARNING: Placeholder API keys detected in .env"
+    echo "   Please update them with real values before continuing."
+    read -p "Continue anyway? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+echo "✅ API keys configured"
+
+echo ""
+echo "🚀 All checks passed! Starting backend..."
+echo ""
 
 # Start the backend in background
 cd "$BACKEND_DIR"
@@ -59,6 +113,7 @@ done
 
 if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
     echo "❌ Server failed to start"
+    echo "📋 Check logs: tail -f /tmp/backend.log"
     kill $BACKEND_PID 2>/dev/null || true
     exit 1
 fi
@@ -81,18 +136,27 @@ echo ""
 echo "🎉 Nintendo Chatbot is now running!"
 echo ""
 echo "📍 Server: http://127.0.0.1:5002"
-echo "💬 Query endpoint: http://127.0.0.1:5002/api/query"
-echo "📊 Stats endpoint: http://127.0.0.1:5002/api/stats"
-echo "🏥 Health endpoint: http://127.0.0.1:5002/api/health"
+echo "💬 Query: http://127.0.0.1:5002/api/query"
+echo "🏥 Health: http://127.0.0.1:5002/api/health"
+echo "📊 Stats: http://127.0.0.1:5002/api/stats"
 echo ""
-echo "Example query:"
-echo '  curl -X POST http://127.0.0.1:5002/api/query \'
+echo "🧪 Example query:"
+echo '  curl -s -X POST http://127.0.0.1:5002/api/query \'
 echo '    -H "Content-Type: application/json" \'
-echo '    -d '"'"'{"query":"Tell me about Nintendo","top_k":5}'"'"
+echo '    -d '"'"'{"query":"Tell me about Nintendo"}'"'"' | jq '\''.response'\'''
 echo ""
-echo "Press CTRL+C to stop the server"
+echo ""
+echo "💬 Or use interactive CLI:"
+echo "  cd backend"
+echo "  source ../.venv/bin/activate"
+echo "  python cli_chat.py"
+echo ""
+echo "📝 View logs:"
+echo "  tail -f /tmp/backend.log"
+echo ""
+echo "🛑 Stop server: Press CTRL+C"
 echo ""
 
 # Keep script running until interrupted
-trap "kill $BACKEND_PID 2>/dev/null || true; echo 'Backend stopped'; exit 0" SIGINT
+trap "kill $BACKEND_PID 2>/dev/null || true; echo ''; echo '🛑 Backend stopped'; exit 0" SIGINT
 wait $BACKEND_PID
