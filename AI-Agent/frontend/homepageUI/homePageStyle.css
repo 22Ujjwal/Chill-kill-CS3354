@@ -1,3 +1,4 @@
+
 /* General body styling */
 body {
     font-family: "Red Hat Display", sans-serif;
@@ -74,6 +75,66 @@ nav a:hover {
     background-color: red;
     color: white;
     border: 2px solid white;
+    transition-duration: 0.4s;
+}
+
+.dropbtn {
+    font-family: "Red Hat Display", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    background-color: white;
+    color: red;
+    margin-left: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid red;
+    border-radius: 15px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    font-family: "Red Hat Display", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 15px;
+    min-width: 10.5vw;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin-left: 0;
+    padding: 0;
+}
+
+.dropdown-content a {
+    margin-left: 0;
+    margin: 4px 4px;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 15px;
+    color: red;
+    padding: 8px 10px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: red;
+    color: white;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: red;
+    color: white;
     transition-duration: 0.4s;
 }
 
@@ -163,6 +224,7 @@ nav a:hover {
     background-image: url('../Images/NintendoSwitch2Logo.png');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     box-shadow: 0 8px 16px -4px rgba(0,0,0,0.6);
 }
 

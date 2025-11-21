@@ -1,0 +1,176 @@
+/* General reset */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Full-screen container */
+.browser-frame {
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top red bar */
+.header-bar {
+    height: 16px;
+    background-color: #c0392b;
+    border-bottom: 2px solid #ccc;
+}
+
+/* Main content wrapper */
+.main-content-area {
+    padding: 30px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content-area h1 {
+    font-size: 42px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #c0392b;
+}
+
+/* Sidebar + form container */
+.content-container {
+    display: flex;
+    flex-grow: 1;
+    border-left: 1px solid #ccc;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    border-right: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.nav-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-item.active {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+/* Right side form */
+.form-area {
+    flex-grow: 1;
+    padding: 10px 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    background-color: #f5f1f1;
+    padding: 5px 8px;
+    border-radius: 15px;
+    width: 150px;
+}
+
+.form-group input {
+    width: 300px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+
+.button {
+    background-color: #f0f0f0;
+    padding: 8px 15px;
+    border: 1px solid #aaa;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.reset-button {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 8px 15px;
+    border: 1px solid #aaa;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 300 !important;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.confirm-button {
+    background-color: #f0f0f0;
+    padding: 8px 15px;
+    border: 1px solid #aaa;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.reset-button:hover {
+    background-color: #e0e0e0;
+}
+.confirm-button:hover {
+    background-color: #e0e0e0;
+}
+
+.back-button {
+    margin-top: auto;
+    font-weight: bold;
+    color: #c0392b; /* Match your theme red */
+    border-top: 1px solid #ccc;
+}
+
+.back-button:hover {
+    background-color: #ffecec; /* slight red tint */
+    cursor: pointer;
+}
+
+.delete-button {
+    /* Base styles, similar to reset button */
+    background-color: #f7dada; /* Light red/pink background */
+    color: #c0392b; /* Same red as your header bar */
+    padding: 8px 15px;
+    border: 1px solid #c0392b;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Space it out from the reset button */
+    display: inline-block;
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* Red background on hover */
+    color: #fff;
+}
+
+/* Content switching */
+.content-block {
+    padding-top: 10px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.hidden-content {
+    display: none !important;
+    opacity: 0;
+}
+
+.active-content {
+    display: block !important;
+    opacity: 1;
+}

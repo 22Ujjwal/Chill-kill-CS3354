@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="browser-frame">
+        <header class="header-bar"></header>
+        <div class="main-content-area">
+            <h1>Account Management</h1>
+            <div class="content-container">
+                <nav class="sidebar">
+                    <div class="nav-item active" data-content="personal-info">Personal Information</div>
+                    <div class="nav-item" data-content="login-security">Login &amp; Security</div> 
+                    <div class="nav-item back-button" id="backToHome">← Back</div>
+                </nav>
+                <main class="form-area">
+                    <!-- Personal Information Tab -->
+                    <div id="personal-info" class="content-block active-content">
+                        <form id="personal-info-form">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" disabled>
+                            </div>
+                            <button type="submit" class="confirm-button">Confirm</button>
+                        </form>
+                    </div>
+
+                    <!-- Login & Security Tab -->
+                    <div id="login-security" class="content-block hidden-content">
+                        <form>
+                            <a href="../usermanagementUI/resetpassword/old_password.html" class="reset-button" role="button">Reset password</a>
+                            <a href="#" id="delete-account-button" class="delete-button" role="button">Delete Account</a>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JS as ES module so imports work and tabs become clickable -->
+    <script type="module" src="usermanagement.js"></script>
+</body>
+</html>
