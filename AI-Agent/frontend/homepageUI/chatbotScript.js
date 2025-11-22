@@ -1,18 +1,3 @@
-async function getSummary() {
-  console.log(getSummaryContent())
-}
-
-async function getSummaryContent() {
-  const response = await fetch('http://127.0.0.1:5002/api/history', {
-    method: 'GET',
-    headers: {
-      'Content-Type': "application/json"
-    }
-  })
-  const data = await response.json()
-  return data.history
-}
-
 // async function initializeAI() {
 //   const response = await fetch('http://127.0.0.1:5002/api/initialize', {
 //     method: 'POST',
