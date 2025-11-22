@@ -8,13 +8,15 @@ async function getSummary() {
     email: reciever,
     history: reply
   };
-  emailjs.send(service_xqtpoh5, template_q3wnyeg, parameters)
-    .then((response) => {
-      console.log('Success!', response.status, response.text);
-    }, 
-    (error) => {
-      console.log('failure', error);
-    });
+  if (currentUserEmail){
+    emailjs.send(service_xqtpoh5, template_q3wnyeg, parameters)
+      .then((response) => {
+        console.log('Success!', response.status, response.text);
+      }, 
+      (error) => {
+        console.log('failure', error);
+      });
+  }
 }
 
 async function getSummaryContent() {
@@ -200,4 +202,4 @@ document.getElementById("user-input").addEventListener("keydown", function (even
   }
 });
 
-module.exports = { openForm, closeForm, sendMessage };
+module.exports = { openForm, closeForm, sendMessage, };
