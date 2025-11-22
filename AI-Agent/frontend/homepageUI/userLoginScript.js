@@ -45,11 +45,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });*/
 //--------------------------------------------------------------------------
+// Preparing to export user email.
+let currentUserEmail = null;
 
 // Function for displaying contents of navigation bar depends on log in/log out state
 onAuthStateChanged(auth, (user) =>{
     if (user) { // logged in state
         const name = user.displayName || (user.email ? user.email.split('@')[0] : 'User'); // display username before @ symbol from email
+        currentUserEmail = user.email; // save current user's email for export
         if (navbarDisplayUser) {
             navbarDisplayUser.textContent = 'Welcome ' + name + '!';
         }
@@ -61,6 +64,7 @@ onAuthStateChanged(auth, (user) =>{
             navbarSignUpButton.href = ACCOUNT_MANAGEMENT_PATH;
         }
     } else { // logged out state
+        currentUserEmail = null;
         if (navbarDisplayUser) {
             navbarDisplayUser.textContent = 'Hello!'; // replace "Welcome, username" with "Hello"
         }
@@ -69,6 +73,8 @@ onAuthStateChanged(auth, (user) =>{
         }
     }
 });
+// export currentUserEmail to getSummary in chatbotScript
+export {currentUserEmail};
 
 // Logging out using Firebase authentication system when the user clicks the logout button/
 if (navbarLoginButton){
