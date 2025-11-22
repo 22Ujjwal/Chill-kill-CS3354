@@ -1,3 +1,6 @@
+async function getSummary() {
+  console.log("this works")
+}
 
 // async function initializeAI() {
 //   const response = await fetch('http://127.0.0.1:5002/api/initialize', {
