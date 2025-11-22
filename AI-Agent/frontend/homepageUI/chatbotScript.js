@@ -1,5 +1,20 @@
+import {currentUserEmail} from './userLoginScript.js'
+
 async function getSummary() {
-  console.log(getSummaryContent())
+  emailjs.init({ publicKey: "9KqPy808pd0-b2NgZ" });
+  const reply = JSON.stringify(await getSummaryContent(), null, 2);
+  const reciever = currentUserEmail;
+  const parameters = {
+    email: reciever,
+    history: reply
+  };
+  emailjs.send(service_xqtpoh5, template_q3wnyeg, parameters)
+    .then((response) => {
+      console.log('Success!', response.status, response.text);
+    }, 
+    (error) => {
+      console.log('failure', error);
+    });
 }
 
 async function getSummaryContent() {
