@@ -1,5 +1,6 @@
 const testLogin = require('./testingLogin');
 const testSignup = require("./testingSignup");
+const testReset = require("./testingResetPW")
 
 test('Valid email and valid password', () => {
   expect(testLogin("exists@gmail.com", "H3Ll0$aM")).toBe("Login successful!");
